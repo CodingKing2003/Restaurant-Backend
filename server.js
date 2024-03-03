@@ -20,6 +20,7 @@ app.use(morgan("dev"));
 // routes
 
 app.use("/api/v1/test",require("./routes/testRouter"));
+app.use("/api/v1/auth",require("./routes/authRoutes"));
 
 
 const PORT=process.env.PORT ||8080 ;
