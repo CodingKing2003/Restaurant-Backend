@@ -1,9 +1,9 @@
 const userModel = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 
-const registerController = async (req, res) => {
+exports.registerController = async (req, res) => {
   try {
-    const { userName, email, password, phone, address,answer } = req.body;
+    const { userName, email, password, phone, address, answer } = req.body;
     if (!userName || !email || !password || !phone || !address || !answer) {
       return res.status(400).send({
         success: false,
@@ -27,7 +27,7 @@ const registerController = async (req, res) => {
       email,
       password: hashedPassword,
       phone,
-      answer
+      answer,
     });
 
     res.status(201).send({
@@ -45,4 +45,35 @@ const registerController = async (req, res) => {
   }
 };
 
-module.exports = registerController;
+exports.loginController = async (req, res) => {
+  try {
+    const {email,password}=req.body;
+    if(!email || !password){
+      return res.status(400).send({
+        success:false,
+        message:"Please provide all details"
+      })
+    }
+    const user=await userModel.findOne({email})
+    if(!user){
+      return res.status(400).send({
+        success:false,
+        message:"User not found"
+      })
+    }
+
+    res.status(200).send({
+      success:true,
+      message:"Login successfully",
+      user
+
+    })
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error In Register API",
+      error,
+    });
+  }
+};
